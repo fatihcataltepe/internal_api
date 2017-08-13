@@ -6,7 +6,7 @@ import akka.http.scaladsl.server.Route
 /**
   * Trait for defining routes to be used for web api.
   */
-trait WebApiRoutes extends WebApiExceptionHandler with MoneyTransactionApi {
+trait WebApiRoutes extends MoneyTransactionApi {
 
   /**
     * Defined routes for application.
