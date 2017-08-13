@@ -12,7 +12,7 @@ This project is implemented to simulate a simple web service enables money trans
 
 ## Configuration
 In the `target/universal/internal-api-<version_number>` directory, there is a `conf` folder. You will see
- - `logback.xml` to configure your loggig settings
+ - `logback.xml` to configure your logging settings
  - `application.conf` to configure your application settings
  
  Note that with default configurations, the application can already works. However, you can customise if you want.
@@ -33,8 +33,8 @@ In the `target/universal/internal-api-<version_number>` directory, there is a `c
  ## Inteface
  Since this is a demo project only 1 interface is implemented which enables money transactions between registered users.
  
- 1. **GET** /money-transaction?from=<id_1>&to=<id_2>&amount=<amount>
- This routes takes 3 mandatory parameters. 
+ 1. **GET** `/money-transaction?from=id_1&to=id_2&amount=amount`
+ The route takes 3 mandatory parameters. 
  
  | name | type | notes |
  | --- | --- | --- | 
@@ -44,7 +44,6 @@ In the `target/universal/internal-api-<version_number>` directory, there is a `c
  
  - The route returns one of the following responses:
  
- 1.
  
  ```json
  {
@@ -53,8 +52,7 @@ In the `target/universal/internal-api-<version_number>` directory, there is a `c
  }
  ```  
  
-  2.
-  
+
   ```json
   {
       "status": "Error",
@@ -62,7 +60,6 @@ In the `target/universal/internal-api-<version_number>` directory, there is a `c
   }
   ```  
   
-   3.
    
    ```json
    {
