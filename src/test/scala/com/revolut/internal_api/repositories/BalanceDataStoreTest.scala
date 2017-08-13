@@ -11,17 +11,15 @@ class BalanceDataStoreTest extends FunSpec {
   describe("BalanceDataStoreTest") {
 
     it("testExecuteTransaction success") {
-      val db: BalanceDataStore = BalanceDataStore()
 
-      db.executeTransaction(5, 2, 1000).onComplete { _ =>
-        assert(db.getBalanceOfUser(5).get == 126000)
-        assert(db.getBalanceOfUser(2).get == 16000)
+      BalanceDataStore.executeTransaction(5, 2, 1000).onComplete { _ =>
+        assert(BalanceDataStore.getBalanceOfUser(5).get == 126000)
+        assert(BalanceDataStore.getBalanceOfUser(2).get == 16000)
       }
     }
 
     it("testExecuteTransaction from user not found") {
-      val db: BalanceDataStore = BalanceDataStore()
-      val transaction: Future[Unit] = db.executeTransaction(15, 2, 1000)
+      val transaction: Future[Unit] = BalanceDataStore.executeTransaction(15, 2, 1000)
 
       transaction.onSuccess{ case _ => assert(false)}
       transaction.onFailure {
@@ -30,8 +28,7 @@ class BalanceDataStoreTest extends FunSpec {
     }
 
     it("testExecuteTransaction to user not found") {
-      val db: BalanceDataStore = BalanceDataStore()
-      val transaction: Future[Unit] = db.executeTransaction(5, 12, 1000)
+      val transaction: Future[Unit] = BalanceDataStore.executeTransaction(5, 12, 1000)
 
       transaction.onSuccess{ case _ => assert(false)}
       transaction.onFailure {

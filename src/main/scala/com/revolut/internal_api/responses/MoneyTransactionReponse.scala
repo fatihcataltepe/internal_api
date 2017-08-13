@@ -2,7 +2,7 @@ package com.revolut.internal_api.responses
 
 case class MoneyTransactionResponse(status: String, message: String)
 
-object MoneyTransactionResponse {
+object MoneyTransactionResponseBuilder {
 
   def success: MoneyTransactionResponse = MoneyTransactionResponse("Success", "Transaction is completed")
 

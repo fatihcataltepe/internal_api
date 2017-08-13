@@ -11,7 +11,7 @@ import scala.concurrent.Future
   *
   * In the future, this can be replaced by a real database
   */
-class BalanceDataStore() {
+object BalanceDataStore {
   /**
     * Fake map that stores user and their balances
     * Users are represented by int (consider as user id)
@@ -50,10 +50,12 @@ class BalanceDataStore() {
     */
   def getBalanceOfUser(user: Int): Option[Double] = balances.get(user)
 
-}
 
-object BalanceDataStore {
-
-  def apply(): BalanceDataStore = new BalanceDataStore()
+  /**
+    * For debug purposes
+    *
+    * @return the formatted string of balances
+    */
+  override def toString: String = balances.toList.sortBy(_._1).map(x =>s"${x._1},${x._2}").mkString("\n")
 
 }

@@ -5,7 +5,8 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.revolut.internal_api.exceptions.{AccountNotFoundException, InsufficientBalanceException}
 import com.revolut.internal_api.repositories.BalanceDataStore
-import com.revolut.internal_api.responses.MoneyTransactionResponse
+import com.revolut.internal_api.responses.MoneyTransactionResponseBuilder
+import com.typesafe.scalalogging.LazyLogging
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -13,7 +14,7 @@ import scala.util.{Failure, Success}
 /**
   * Trait for defining routes to be used for `money-transaction`.
   */
-trait MoneyTransactionApi extends JsonSupport {
+trait MoneyTransactionApi extends JsonSupport with LazyLogging {
 
   /**
     * Defined routes for `money-transaction`.
@@ -23,17 +24,17 @@ trait MoneyTransactionApi extends JsonSupport {
       path("money-transaction") {
         parameters('from.as[Int], 'to.as[Int], 'amount.as[Int]) {
           (from, to, amount) =>
-            val dataStore: BalanceDataStore = BalanceDataStore()
-            val transaction: Future[Unit] = dataStore.executeTransaction(from, to, amount)
+
+            val transaction: Future[Unit] = BalanceDataStore.executeTransaction(from, to, amount)
 
             onComplete(transaction) {
-              case Success(_) => complete(MoneyTransactionResponse.success)
+              case Success(_) => complete(MoneyTransactionResponseBuilder.success)
 
-              case Failure(e: InsufficientBalanceException) => complete(StatusCodes.BadRequest, MoneyTransactionResponse.failed(e))
+              case Failure(e: InsufficientBalanceException) => complete(StatusCodes.BadRequest, MoneyTransactionResponseBuilder.failed(e))
 
-              case Failure(e: AccountNotFoundException) => complete(StatusCodes.BadRequest, MoneyTransactionResponse.failed(e))
+              case Failure(e: AccountNotFoundException) => complete(StatusCodes.BadRequest, MoneyTransactionResponseBuilder.failed(e))
 
-              case Failure(e) => complete(StatusCodes.InternalServerError, MoneyTransactionResponse.failed(e))
+              case Failure(e) => complete(StatusCodes.InternalServerError, MoneyTransactionResponseBuilder.failed(e))
             }
 
         }
