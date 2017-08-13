@@ -1,6 +1,6 @@
 package com.revolut.internal_api.routes
 
-import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.revolut.internal_api.exceptions.{AccountNotFoundException, InsufficientBalanceException}
@@ -14,6 +14,7 @@ import scala.util.{Failure, Success}
   * Trait for defining routes to be used for `money-transaction`.
   */
 trait MoneyTransactionApi extends JsonSupport {
+
   /**
     * Defined routes for `money-transaction`.
     */
@@ -26,12 +27,13 @@ trait MoneyTransactionApi extends JsonSupport {
             val transaction: Future[Unit] = dataStore.executeTransaction(from, to, amount)
 
             onComplete(transaction) {
-              case Success(_) => complete(MoneyTransactionResponse("OK", "Success"))
-              case Failure(ex) => ex match {
-                case e: InsufficientBalanceException => complete(HttpResponse(StatusCodes.BadRequest, entity = e.getMessage))
-                case e: AccountNotFoundException => complete(HttpResponse(StatusCodes.BadRequest, entity = e.getMessage))
-                case _: Throwable => complete(HttpResponse(StatusCodes.InternalServerError))
-              }
+              case Success(_) => complete(MoneyTransactionResponse.success)
+
+              case Failure(e: InsufficientBalanceException) => complete(StatusCodes.BadRequest, MoneyTransactionResponse.failed(e))
+
+              case Failure(e: AccountNotFoundException) => complete(StatusCodes.BadRequest, MoneyTransactionResponse.failed(e))
+
+              case Failure(e) => complete(StatusCodes.InternalServerError, MoneyTransactionResponse.failed(e))
             }
 
         }
