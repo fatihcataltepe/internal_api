@@ -22,7 +22,7 @@ trait MoneyTransactionApi extends JsonSupport with LazyLogging {
   val moneyTransactionApi: Route =
     get {
       path("money-transaction") {
-        parameters('from.as[Int], 'to.as[Int], 'amount.as[Int]) {
+        parameters('from.as[Int], 'to.as[Int], 'amount.as[Double]) {
           (from, to, amount) =>
 
             val transaction: Future[Unit] = BalanceDataStore.executeTransaction(from, to, amount)
