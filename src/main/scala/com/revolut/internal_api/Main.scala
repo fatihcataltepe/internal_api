@@ -8,7 +8,7 @@ object Main extends LazyLogging {
   def main(args: Array[String]): Unit = {
     logger.info("Revolut internal-api webservice is starting...")
 
-    val webApiService = new WebApiService()
+    val webApiService: WebApiService = new WebApiService()
     webApiService.start()
   }
 }

@@ -56,6 +56,7 @@ object BalanceDataStore {
     *
     * @return the formatted string of balances
     */
-  override def toString: String = balances.toList.sortBy(_._1).map(x =>s"${x._1},${x._2}").mkString("\n")
+  def currState: String =
+    s"\nuser,balance\n" + balances.toList.sortBy(_._1).map(x => s"${x._1},${x._2}").mkString("\n")
 
 }

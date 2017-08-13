@@ -28,7 +28,9 @@ trait MoneyTransactionApi extends JsonSupport with LazyLogging {
             val transaction: Future[Unit] = BalanceDataStore.executeTransaction(from, to, amount)
 
             onComplete(transaction) {
-              case Success(_) => complete(MoneyTransactionResponseBuilder.success)
+              case Success(_) =>
+                logger.debug(BalanceDataStore.currState) //print the current state of the data store
+                complete(MoneyTransactionResponseBuilder.success)
 
               case Failure(e: InsufficientBalanceException) => complete(StatusCodes.BadRequest, MoneyTransactionResponseBuilder.failed(e))
 
